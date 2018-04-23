@@ -19,6 +19,15 @@ public enum HTTPMethod: String {
     case connect = "CONNECT"
 }
 struct Constants {
+    struct Hint {
+        struct Refresh {
+            static let pull_to_refresh = "Pull"
+            static let relase_to_refresh = "Release"
+            static let success = "Updated"
+            static let refreshing = "Updating"
+            static let failed = "Failed to update"
+        }
+    }
     struct Network {
         struct Endpoints {
             static let getTweets = "statuses/user_timeline.json"

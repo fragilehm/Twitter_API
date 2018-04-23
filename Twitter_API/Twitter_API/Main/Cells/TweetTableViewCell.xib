@@ -228,6 +228,7 @@
                 <outlet property="createdAtLabel" destination="zyG-xi-S2b" id="NEd-sB-wf7"/>
                 <outlet property="descriptionTextView" destination="HKg-RH-X05" id="nyQ-HM-zfv"/>
                 <outlet property="favoriteCountLabel" destination="o9A-FW-sJj" id="TUN-Nk-HeN"/>
+                <outlet property="favoriteImageView" destination="hRx-pO-TY8" id="aNi-AD-o0T"/>
                 <outlet property="playButton" destination="8vC-z7-6a7" id="3Lp-qg-zlM"/>
                 <outlet property="profileImageView" destination="B3t-iE-qPF" id="mJQ-To-Z5r"/>
                 <outlet property="retweetCountLabel" destination="iGv-yN-y7a" id="XER-3a-EWS"/>

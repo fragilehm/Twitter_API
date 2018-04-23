@@ -5,7 +5,7 @@
 //  Created by Khasanza on 4/22/18.
 //  Copyright © 2018 Khasanza. All rights reserved.
 //
-
+import Foundation
 import UIKit
 import TwitterKit
 import SwiftyJSON
@@ -14,9 +14,14 @@ import AVFoundation
 import MediaPlayer
 import AVKit
 import MobileCoreServices
+import PullToRefreshKit
 class MainViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    private weak var timer: Timer?
+    private var actInd: UIActivityIndicatorView = UIActivityIndicatorView()
+    private let loadingView: UIView = UIView()
+
     private var tweets: Tweets?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +33,45 @@ class MainViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //compose()
+        startTimer()
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        stopTimer()
+    }
+    private func startTimer(){
+        self.timer?.invalidate()
+        if #available(iOS 10.0, *) {
+            timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] _ in
+                self?.showActivityIndicator()
+                self?.loadTweets()
+            })
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    private func stopTimer() {
+        self.timer?.invalidate()
+    }
+    private func showActivityIndicator() {
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+        loadingView.center = view.center
+        loadingView.backgroundColor = UIColor().colorFromHex(rgbValue: 0x444444, alpha: 0.7)
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 10
+        actInd.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        actInd.activityIndicatorViewStyle =
+            UIActivityIndicatorViewStyle.whiteLarge
+        actInd.center = CGPoint(x: loadingView.frame.size.width / 2, y: loadingView.frame.size.height / 2)
+        actInd.hidesWhenStopped = true
+        loadingView.addSubview(actInd)
+        view.addSubview(loadingView)
+        actInd.startAnimating()
+    }
+    private func hideActivityIndicator() {
+        UIApplication.shared.endIgnoringInteractionEvents()
+        actInd.stopAnimating()
     }
     private func addTweetButton() {
         let button = UIButton.init(type: .system)
@@ -47,7 +90,6 @@ class MainViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
     @objc private func showProfile(_ sender: UIButton) {
-        print("profile")
         let profileVC = Constants.Storyboard.PROFILE_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.PROFILE_CONTROLLER)
         self.navigationController?.show(profileVC, sender: self)
     }
@@ -62,8 +104,23 @@ class MainViewController: UIViewController {
         self.tableView.tableFooterView = UIView()
         self.tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
         self.tableView.register(UINib.init(nibName: Constants.CellId.TWEET_TABLE_VIEW_CELL, bundle: nil), forCellReuseIdentifier: Constants.CellId.TWEET_TABLE_VIEW_CELL)
+        configureRefreshHeader()
+        
     }
-    func compose() {
+    private func configureRefreshHeader() {
+        let header = DefaultRefreshHeader.header()
+        header.setText(Constants.Hint.Refresh.pull_to_refresh, mode: .pullToRefresh)
+        header.setText(Constants.Hint.Refresh.relase_to_refresh, mode: .releaseToRefresh)
+        header.setText(Constants.Hint.Refresh.success, mode: .refreshSuccess)
+        header.setText(Constants.Hint.Refresh.refreshing, mode: .refreshing)
+        header.setText(Constants.Hint.Refresh.failed, mode: .refreshFailure)
+        header.imageRenderingWithTintColor = true
+        header.durationWhenHide = 0.4
+        self.tableView.configRefreshHeader(container: self) { [weak self] in
+            self?.loadTweets()
+        }
+    }
+    private func compose() {
         if (TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers()) {
             presentImagePicker()
         } else {
@@ -84,14 +141,15 @@ class MainViewController: UIViewController {
     }
     
     func loadTweets() {
-        let sessions = TWTRTwitter.sharedInstance().sessionStore.existingUserSessions()
         if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
             ServerManager.shared.getTweetsOfUser(user_id: userID, setTweets, error: showErrorAlert)
         }
     }
     func setTweets(tweets: Tweets) {
+        self.loadingView.removeFromSuperview()
+        self.tableView.switchRefreshHeader(to: .normal(.none, 0.0))
         self.tweets = tweets
-        print(tweets.tweets[0])
+        hideActivityIndicator()
         self.tableView.reloadData()
     }
 }
@@ -138,7 +196,6 @@ extension MainViewController: UIImagePickerControllerDelegate, TWTRComposerViewC
 }
 extension MainViewController: PlayVideoDelegate {
     func play(url: String) {
-        //print("whaaaaaat", url)
         let player = AVPlayer(url: URL.init(string: url)!)
         let playerViewController = AVPlayerViewController()
         playerViewController.player = player

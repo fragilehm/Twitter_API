@@ -24,7 +24,7 @@ class LoginViewController: UIViewController {
     }
     private func setTwtrSession(twtrSession: TWTRSession?, error: Error?) {
         guard let session = twtrSession else {
-            print("Failed to login via Twitter")
+            showErrorAlert(msg: "Failed to login via Twitter")
             return
         }
         let client = TWTRAPIClient()

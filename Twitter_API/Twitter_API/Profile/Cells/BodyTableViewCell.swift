@@ -26,12 +26,10 @@ class BodyTableViewCell: UITableViewCell {
         if let user = user {
             if section == 1 {
                 if let description = user.description {
-                    print("wwwwww", description)
                     text = description + "\n" + user.url
                 }
             } else if section == 2 {
                 if let location = user.location {
-                    print("wwwwww", location)
                     text = location
                 }
             } else {

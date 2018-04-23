@@ -17,8 +17,6 @@ class RequestManager {
     typealias Parameter = [String: Any]?
     private func request(method: HTTPMethod, endpoint: String, parameters: Parameter, complition: @escaping SuccessHandler, error: @escaping FailureHandler) {
         let apiURL = host + endpoint
-        print(apiURL)
-        print(method.rawValue)
         if !isConnectedToNetwork() {
             error(Constants.Network.ErrorMessages.NO_INTERNET_CONNECTION)
             return
@@ -38,7 +36,6 @@ class RequestManager {
                     complition(json)
                 } catch let jsonError as NSError {
                     error(Constants.Network.ErrorMessages.FAILED_TO_PARSE_JSON)
-                    print(jsonError)
                 }
             }
             

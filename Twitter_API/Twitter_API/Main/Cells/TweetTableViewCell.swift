@@ -27,6 +27,7 @@ class TweetTableViewCell: UITableViewCell {
     @IBOutlet weak var shareCountLabel: UILabel!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var tweetImageHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var favoriteImageView: UIImageView!
     private var video_url: String?
     weak var playDelegate: PlayVideoDelegate?
     override func awakeFromNib() {
@@ -58,12 +59,17 @@ class TweetTableViewCell: UITableViewCell {
         } else {
             tweetImageHeightConstraint.constant = 0
             self.playButton.isHidden = true
-            print("no images found")
             self.tweetImageView.image = UIImage.init(named: "placeholder")
         }
         userFullnameLabel.text = tweet.user.name
         userUsernameLabel.text = "@\(tweet.user.screen_name)"
         descriptionTextView.text = tweet.text
+        if tweet.favorited {
+            favoriteImageView.image = UIImage.init(named: "favorited")
+        }
+        else {
+            favoriteImageView.image = UIImage.init(named: "favorite")
+        }
         favoriteCountLabel.text = "\(tweet.favorite_count)"
         retweetCountLabel.text = "\(tweet.retweet_count)"
         createdAtLabel.text = tweet.created_at.getFormattedDate()
