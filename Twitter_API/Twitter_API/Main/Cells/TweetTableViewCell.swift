@@ -54,7 +54,7 @@ class TweetTableViewCell: UITableViewCell {
             let tweet_image_url = URL.init(string: media.media_url)
             self.setImage(with: tweet_image_url, imageView: tweetImageView)
             checkForVideo(media: media)
-            tweetImageHeightConstraint.constant = 160
+            tweetImageHeightConstraint.constant = 180
         } else {
             tweetImageHeightConstraint.constant = 0
             self.playButton.isHidden = true
@@ -79,7 +79,8 @@ class TweetTableViewCell: UITableViewCell {
     }
     private func setImage(with url: URL?, imageView: UIImageView) {
         if let url = url {
-            imageView.kf.setImage(with: url, placeholder: UIImage.init(named: "placeholder"), options: nil, progressBlock: nil, completionHandler: nil)
+           // imageView.kf.setImage(with: url, placeholder: UIImage.init(named: "placeholder"), options: nil, progressBlock: nil, completionHandler: nil)
+            imageView.kf.setImage(with: url)
         }
     }
 }

@@ -22,4 +22,11 @@ class ServerManager: RequestManager {
             completion(tweets)
         }, error: error)
     }
+    func getUserDetail(user_id: String, _ completion: @escaping (User)-> Void, error: @escaping (String)-> Void) {
+        let parameters = ["user_id": user_id]
+        self.get(endpoint: Constants.Network.Endpoints.getUser, parameters: parameters, completion: { (json) in
+            let user = User(json: json!)
+            completion(user)
+        }, error: error)
+    }
 }

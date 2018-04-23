@@ -33,8 +33,8 @@ class LoginViewController: UIViewController {
         }
     }
     private func navigateToMain() {
-        let mainVC = Constants.Storyboard.MAIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.MAIN_CONTROLLER)
-        self.navigationController?.show(mainVC, sender: self)
+        let mainVC = Constants.Storyboard.MAIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.MAIN_NAVIGATION_CONTROLLER)
+        self.navigationController?.present(mainVC, animated: true, completion: nil)
     }
     private func setupLoginButton() {
         self.view.addSubview(loginButton)

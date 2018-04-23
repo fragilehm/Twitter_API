@@ -22,6 +22,7 @@ struct Constants {
     struct Network {
         struct Endpoints {
             static let getTweets = "statuses/user_timeline.json"
+            static let getUser = "users/show.json"
         }
         struct ErrorMessages {
             static let NO_INTERNET_CONNECTION = "Please, connect to the internet and retry"
@@ -37,12 +38,16 @@ struct Constants {
     struct ControllerId {
         static let MAIN_CONTROLLER = "MainViewController"
         static let MAIN_NAVIGATION_CONTROLLER = "MainNav"
+        static let LOGIN_NAVIGATION_CONTROLLER = "LoginNav"
         static let LOGIN_CONTROLLER = "LoginViewController"
         static let PROFILE_CONTROLLER = "ProfileViewController"
     }
     struct CellId {
         static let TWEET_TABLE_VIEW_CELL = "TweetTableViewCell"
+        static let PROFILE_HEADER_TABLE_VIEW_CELL = "HeaderTableViewCell"
+        static let PROFILE_BODY_TABLE_VIEW_CELL = "BodyTableViewCell"
     }
+    static let PROFILE_TITLES = ["", "About me", "Contacts", ""]
 }
 struct Colors {
     static let MAIN_COLOR = 0x00aced

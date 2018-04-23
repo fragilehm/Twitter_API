@@ -13,6 +13,7 @@ import Kingfisher
 import AVFoundation
 import MediaPlayer
 import AVKit
+import MobileCoreServices
 class MainViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
@@ -20,14 +21,40 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        self.navigationItem.title = "Authorization"
+        addTweetButton()
+        addProfileButton()
+        self.navigationItem.title = "Home"
         loadTweets()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //compose()
     }
-    func setupTableView(){
+    private func addTweetButton() {
+        let button = UIButton.init(type: .system)
+        button.setImage(#imageLiteral(resourceName: "tweet").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.addTarget(self, action: #selector(tweet(_:)), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+    }
+    private func addProfileButton() {
+        let button = UIButton.init(type: .system)
+        button.setImage(#imageLiteral(resourceName: "placeholder").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.addTarget(self, action: #selector(showProfile(_:)), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+    }
+    @objc private func showProfile(_ sender: UIButton) {
+        print("profile")
+        let profileVC = Constants.Storyboard.PROFILE_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.PROFILE_CONTROLLER)
+        self.navigationController?.show(profileVC, sender: self)
+    }
+    @objc private func tweet(_ sender: UIButton) {
+        compose()
+    }
+    private func setupTableView(){
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 44
@@ -37,21 +64,27 @@ class MainViewController: UIViewController {
         self.tableView.register(UINib.init(nibName: Constants.CellId.TWEET_TABLE_VIEW_CELL, bundle: nil), forCellReuseIdentifier: Constants.CellId.TWEET_TABLE_VIEW_CELL)
     }
     func compose() {
-        let composer = TWTRComposer()
-        
-        composer.setText("just setting up my Twitter Kit")
-        composer.setImage(UIImage(named: "twitter"))
-        composer.show(from: self) { (result) in
-            if result == .done {
-                print("done")
-            } else {
-                print("not done")
+        if (TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers()) {
+            presentImagePicker()
+        } else {
+            TWTRTwitter.sharedInstance().logIn { session, error in
+                if session != nil { // Log in succeeded
+                    self.presentImagePicker()
+                } else {
+                    self.showErrorAlert(msg: "You must log in before presenting a composer.")
+                }
             }
         }
     }
+    func presentImagePicker() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.mediaTypes = [String(kUTTypeImage), String(kUTTypeMovie)]
+        present(picker, animated: true, completion: nil)
+    }
+    
     func loadTweets() {
         let sessions = TWTRTwitter.sharedInstance().sessionStore.existingUserSessions()
-        print(sessions.count)
         if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
             ServerManager.shared.getTweetsOfUser(user_id: userID, setTweets, error: showErrorAlert)
         }
@@ -77,6 +110,30 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.playDelegate = self
         cell.setData(tweet: (tweets?.tweets[indexPath.row])!)
         return cell
+    }
+}
+extension MainViewController: UIImagePickerControllerDelegate, TWTRComposerViewControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: false, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        // Dismiss the image picker
+        dismiss(animated: true, completion: nil)
+        
+        // Grab the relevant data from the image picker info dictionary
+        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        let fileURL = info[UIImagePickerControllerMediaURL] as? URL
+        
+        // Create the composer
+        let composer = TWTRComposerViewController(initialText: "", image: image, videoURL:fileURL)
+        composer.delegate = self
+        present(composer, animated: true, completion: nil)
+    }
+    func composerDidCancel(_ controller: TWTRComposerViewController) {
+        self.dismiss(animated: false, completion: nil)
+    }
+    func composerDidSucceed(_ controller: TWTRComposerViewController, with tweet: TWTRTweet) {
+        self.loadTweets()
     }
 }
 extension MainViewController: PlayVideoDelegate {

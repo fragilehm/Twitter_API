@@ -12,9 +12,15 @@ struct User {
     var profile_image_url: String
     var name: String
     var screen_name: String
+    var description: String?
+    var location: String?
+    var url: String
     init(json: JSON) {
         profile_image_url = json["profile_image_url"].stringValue
         name = json["name"].stringValue
         screen_name = json["screen_name"].stringValue
+        description = json["description"].stringValue
+        location = json["location"].stringValue
+        url = json["url"].stringValue
     }
 }

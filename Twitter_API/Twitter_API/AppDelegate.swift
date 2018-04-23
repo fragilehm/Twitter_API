@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     private func isLoggedIn() {
         if TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() {
-            self.window?.rootViewController = Constants.Storyboard.MAIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.MAIN_NAVIGATION_CONTROLLER)
+            self.window?.rootViewController =
+            Constants.Storyboard.MAIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.MAIN_NAVIGATION_CONTROLLER)
         } else {
             self.window?.rootViewController = Constants.Storyboard.LOGIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.LOGIN_CONTROLLER)
         }
@@ -35,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupNavigationBarAppearence() {
         UINavigationBar.appearance().tintColor = UIColor.init(netHex: Colors.MAIN_COLOR)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.init(netHex: Colors.MAIN_COLOR)]
-//        UINavigationBar.appearance().isTranslucent = false
+        UINavigationBar.appearance().isTranslucent = false
 //        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
 //        UINavigationBar.appearance().shadowImage = UIImage()
     }
