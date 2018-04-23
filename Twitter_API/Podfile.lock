@@ -1,0 +1,28 @@
+PODS:
+  - Kingfisher (4.6.4)
+  - SwiftyJSON (4.0.0)
+  - TwitterCore (3.1.0)
+  - TwitterKit (3.3.0):
+    - TwitterCore (>= 3.1.0)
+
+DEPENDENCIES:
+  - Kingfisher
+  - SwiftyJSON
+  - TwitterKit
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Kingfisher
+    - SwiftyJSON
+    - TwitterCore
+    - TwitterKit
+
+SPEC CHECKSUMS:
+  Kingfisher: 68498a706e46c2a050b0c9572f100e5db407f6e0
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+  TwitterCore: 644d59e75abccb26cf0a9050d2c4dea0e5412241
+  TwitterKit: a2e60ddcedbf54091eac6f27685ca7a87681e1d7
+
+PODFILE CHECKSUM: a4e817ecd022412e0a2a3bdabfac9ef2658cc0be
+
+COCOAPODS: 1.5.0
