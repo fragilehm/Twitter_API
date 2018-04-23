@@ -49,7 +49,10 @@ class ProfileViewController: UIViewController {
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return Constants.PROFILE_TITLES.count
+        if let _ = user {
+            return Constants.PROFILE_TITLES.count
+        }
+        return 0
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1

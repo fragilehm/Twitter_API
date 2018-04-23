@@ -70,8 +70,8 @@ class TweetTableViewCell: UITableViewCell {
         else {
             favoriteImageView.image = UIImage.init(named: "favorite")
         }
-        favoriteCountLabel.text = "\(tweet.favorite_count)"
-        retweetCountLabel.text = "\(tweet.retweet_count)"
+        favoriteCountLabel.text = "\(tweet.favorite_count > 0 ? "\(tweet.favorite_count)": "")"
+        retweetCountLabel.text = "\(tweet.retweet_count > 0 ? "\(tweet.retweet_count)": "")"
         createdAtLabel.text = tweet.created_at.getFormattedDate()
         
     }

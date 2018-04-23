@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TWTRTwitter.sharedInstance().start(withConsumerKey: consumerKey, consumerSecret: consumerSecret)
         setupNavigationBarAppearence()
         isLoggedIn()
-
         return true
     }
     private func isLoggedIn() {
@@ -30,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController =
             Constants.Storyboard.MAIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.MAIN_NAVIGATION_CONTROLLER)
         } else {
-            self.window?.rootViewController = Constants.Storyboard.LOGIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.LOGIN_CONTROLLER)
+            self.window?.rootViewController = Constants.Storyboard.LOGIN_STORYBOARD.instantiateViewController(withIdentifier: Constants.ControllerId.LOGIN_NAVIGATION_CONTROLLER)
         }
     }
     private func setupNavigationBarAppearence() {

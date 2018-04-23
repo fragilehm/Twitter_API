@@ -188,7 +188,7 @@ extension MainViewController: UIImagePickerControllerDelegate, TWTRComposerViewC
         present(composer, animated: true, completion: nil)
     }
     func composerDidCancel(_ controller: TWTRComposerViewController) {
-        self.dismiss(animated: false, completion: nil)
+        //self.dismiss(animated: false, completion: nil)
     }
     func composerDidSucceed(_ controller: TWTRComposerViewController, with tweet: TWTRTweet) {
         self.loadTweets()
